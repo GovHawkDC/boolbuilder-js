@@ -13,35 +13,37 @@ function transformGroup (group) {
 
   return {
     bool: rules
-      .map(rule => transformRule(group, rule))
+      .map(rule => {
+        const clause = getClause(group, rule)
+
+        return {
+          clause,
+          fragment: transformRule(group, rule)
+        }
+      })
       .reduce(mergeByClause, {})
   }
 }
 
 function transformRule (group, rule) {
-  const clause = getClause(group, rule)
-
   const { condition } = group
   const { operator, rules } = rule
 
   if (rules && rules.length > 0) {
-    return { clause, fragment: transformGroup(rule) }
+    return transformGroup(rule)
   }
 
   const fragment = getFragment(rule)
 
   if (condition.toUpperCase() === 'OR' && isNegativeOperator(operator)) {
     return {
-      clause,
-      fragment: {
-        bool: {
-          must_not: [fragment]
-        }
+      bool: {
+        must_not: [fragment]
       }
     }
   }
 
-  return { clause, fragment }
+  return fragment
 }
 
 function mergeByClause (accumulator, data) {
