@@ -12,7 +12,9 @@ function transformGroup (group) {
   }
 
   return {
-    bool: rules.map(rule => tranformGroup(group, rule))
+    bool: rules
+      .map(rule => transformRule(group, rule))
+      .reduce(mergeByClause, {})
   }
 }
 
@@ -20,7 +22,7 @@ function transformRule (group, rule) {
   const clause = getClause(group, rule)
 
   const { condition } = group
-  const { field, operator, rules } = rule
+  const { operator, rules } = rule
 
   if (rules && rules.length > 0) {
     return { clause, fragment: transformGroup(rule) }
@@ -40,6 +42,16 @@ function transformRule (group, rule) {
   }
 
   return { clause, fragment }
+}
+
+function mergeByClause (accumulator, data) {
+  const { clause, fragment } = data
+  const existingFragments = accumulator[clause] || []
+
+  return {
+    ...accumulator,
+    [clause]: [...existingFragments, fragment]
+  }
 }
 
 export default transformGroup
