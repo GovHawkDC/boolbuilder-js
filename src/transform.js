@@ -1,34 +1,52 @@
 import { getClause, getFragment, isNegativeOperator } from './es'
 
-function transformGroup (group) {
+function transformGroup (group, filters = {}) {
   if (!group) {
     return {}
   }
 
-  const { rules } = group
+  const { QB, rules } = group
 
   if (!rules || rules.length < 1) {
     return {}
   }
 
-  return {
-    bool: rules
+  /*
+  QB, filters{QB:func}
+
+  func (group, rules, next*) {
+     return {:bool}
+  }
+  */
+
+  function nextPostFilter (group, rules) {
+    return rules
       .map(rule => {
         return {
           clause: getClause(group, rule),
-          fragment: transformRule(group, rule)
+          fragment: transformRule(group, rule, filters)
         }
       })
       .reduce(mergeByClause, {})
   }
+
+  const filterFunc = filters[QB] || defaultFilterFunc
+
+  return {
+    bool: filterFunc(group, rules, nextPostFilter)
+  }
 }
 
-function transformRule (group, rule) {
+function defaultFilterFunc (group, rules, nextFunc) {
+  return nextFunc(group, rules)
+}
+
+function transformRule (group, rule, filters) {
   const { condition } = group
   const { operator, rules } = rule
 
   if (rules && rules.length > 0) {
-    return transformGroup(rule)
+    return transformGroup(rule, filters)
   }
 
   const fragment = getFragment(rule)
