@@ -44,7 +44,7 @@ test('(1) QB data -> ES query', () => {
   })
 })
 
-test('(1) QB data -> ES query', () => {
+test('(2) QB data -> ES query', () => {
   expect(transform({
     condition: 'AND',
     rules: [
@@ -95,4 +95,8 @@ test('(1) QB data -> ES query', () => {
       ]
     }
   })
+})
+
+test('(3) QB data -> ES query', () => {
+  expect(transform({})).toEqual({})
 })
