@@ -1,0 +1,35 @@
+{
+  "name": "boolbuilder-js",
+  "version": "0.1.0",
+  "description": "querybuilder-like object to elasticsearch bool query object parser/transformer",
+  "main": "index.js",
+  "author": "Saxon W. Stiller",
+  "license": "MIT",
+  "scripts": {
+    "build": "NODE_ENV=production babel src --out-dir lib",
+    "test": "jest"
+  },
+  "jest": {
+    "rootDir": "src"
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.{js,jsx,json}": [
+        "standard --fix --parser babel-eslint",
+        "git add"
+      ]
+    }
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^22.4.1",
+    "babel-preset-react-app": "^3.1.1",
+    "husky": "^0.14.3",
+    "jest": "^22.4.2",
+    "lint-staged": "^7.0.0",
+    "regenerator-runtime": "^0.11.1",
+    "standard": "^11.0.0"
+  }
+}
