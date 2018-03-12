@@ -46,6 +46,14 @@ test('value containing "?" to getOperator is "wildcard"', () => {
   expect(getOperator({ value: 'hello world?' })).toBe('wildcard')
 })
 
+test('operator "contains" to getOperator is "match"', () => {
+  expect(getOperator({ operator: 'contains', value: '' })).toBe('match')
+})
+
+test('operator unknown to getOperator is "range"', () => {
+  expect(getOperator({ operator: '>>>', value: 'hello world' })).toBe('range')
+})
+
 // isNegativeOperator
 test('is_null to isNegativeOperator is true', () => {
   expect(isNegativeOperator('is_null')).toBe(true)
