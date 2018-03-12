@@ -14,10 +14,8 @@ function transformGroup (group) {
   return {
     bool: rules
       .map(rule => {
-        const clause = getClause(group, rule)
-
         return {
-          clause,
+          clause: getClause(group, rule),
           fragment: transformRule(group, rule)
         }
       })
