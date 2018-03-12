@@ -35,6 +35,8 @@ function transformRule (group, rule) {
 
   const fragment = getFragment(rule)
 
+  // this is a corner case, when we have an "or" group and a negative operator,
+  // we express this with a sub boolean query and must_not
   if (condition.toUpperCase() === 'OR' && isNegativeOperator(operator)) {
     return {
       bool: {
