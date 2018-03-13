@@ -3,6 +3,7 @@ import {
   getClause,
   getFragment,
   getOperator,
+  getValue,
   isNegativeOperator
 } from './es'
 
@@ -68,6 +69,16 @@ test('operator "contains" to getOperator is "match"', () => {
 
 test('operator unknown to getOperator is "range"', () => {
   expect(getOperator({ operator: '>>>', value: 'hello world' })).toBe('range')
+})
+
+// getValue
+test('"between" operator to getValue should return gte/lte object', () => {
+  expect(getValue({ operator: 'between', value: ['1', '2'] }))
+    .toEqual({ gte: '1', lte: '2' })
+})
+
+test('unknown operator to getValue should throw', () => {
+  expect(() => getValue({ operator: '<>', value: ['1', '2'] })).toThrow()
 })
 
 // isNegativeOperator
