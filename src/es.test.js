@@ -1,6 +1,7 @@
 import {
   getArrayValue,
   getClause,
+  getFragment,
   getOperator,
   isNegativeOperator
 } from './es'
@@ -16,6 +17,21 @@ test('string arg to getArrayValue returns comma-split array', () => {
 
 test('non-string|array arg to getArrayValue throws', () => {
   expect(() => getArrayValue(true)).toThrow()
+})
+
+// getFragment
+test(
+  '"is_null" operator to getFragment returns nested "exists" fragment',
+  () => {
+    expect(getFragment({ field: 'name', operator: 'is_null' }))
+      .toEqual({ exists: { field: 'name' } })
+  }
+)
+
+test('"proximity" operator to getFragment returns a "standard" fragment', () => {
+  expect(
+    getFragment({ field: 'name', operator: 'proximity', value: [ 'a', '2' ] })
+  ).toEqual({ match_phrase: { name: { query: 'a', slop: '2' } } })
 })
 
 // getClause
