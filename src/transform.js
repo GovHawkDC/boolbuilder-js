@@ -11,34 +11,26 @@ function transformGroup (group, filters = {}) {
     return {}
   }
 
-  /*
-  QB, filters{QB:func}
-
-  func (group, rules, next*) {
-     return {:bool}
-  }
-  */
-
-  function nextPostFilter (group, rules) {
-    return rules
-      .map(rule => {
-        return {
-          clause: getClause(group, rule),
-          fragment: transformRule(group, rule, filters)
-        }
-      })
-      .reduce(mergeByClause, {})
-  }
-
-  const filterFunc = filters[QB] || defaultFilterFunc
+  const filter = filters[QB] || transformGroupDefaultFilter
 
   return {
-    bool: filterFunc(group, rules, nextPostFilter)
+    bool: filter(group, rules, filters, transformGroupPostFilter)
   }
 }
 
-function defaultFilterFunc (group, rules, nextFunc) {
-  return nextFunc(group, rules)
+function transformGroupPostFilter (group, rules, filters) {
+  return rules
+    .map(rule => {
+      return {
+        clause: getClause(group, rule),
+        fragment: transformRule(group, rule, filters)
+      }
+    })
+    .reduce(mergeByClause, {})
+}
+
+function transformGroupDefaultFilter (group, rules, filters, postFilter) {
+  return postFilter(group, rules, filters)
 }
 
 function transformRule (group, rule, filters) {
