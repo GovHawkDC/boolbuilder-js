@@ -1,12 +1,16 @@
 {
   "name": "boolbuilder-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "querybuilder-like object to elasticsearch bool query object parser/transformer",
   "main": "index.js",
+  "files": [
+    "lib"
+  ],
   "author": "Saxon W. Stiller",
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
+    "prepack": "NODE_ENV=production babel --presets react-app src -d lib --copy-files",
     "test": "jest"
   },
   "husky": {
