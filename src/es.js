@@ -47,6 +47,9 @@ function getFragment (rule) {
 function getOperator (rule) {
   const { operator, value } = rule
 
+  // HACK: This accepts most types and seems to convert to string; however,
+  // it might be better to do something like `JSON.parse` to explicitly
+  // convert to a string
   if (/.(\*|\?)/.test(value)) {
     return 'wildcard'
   }
